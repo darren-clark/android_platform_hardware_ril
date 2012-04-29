@@ -87,7 +87,7 @@ namespace android {
 #define PRINTBUF_SIZE 8096
 
 // Enable RILC log
-#define RILC_LOG 0
+#define RILC_LOG 1
 
 #if RILC_LOG
     #define startRequest           sprintf(printBuf, "(")
@@ -298,6 +298,7 @@ strdupReadString(Parcel &p) {
 }
 
 static void writeStringToParcel(Parcel &p, const char *s) {
+if (!s) { RLOGE("writeStringToParcel s is null"); }
     char16_t *s16;
     size_t s16_len;
     s16 = strdup8to16(s, &s16_len);
@@ -1037,7 +1038,6 @@ dispatchImsGsmSms(Parcel &p, RequestInfo *pRI, uint8_t retry, int32_t messageRef
     rism.messageRef = messageRef;
 
     startRequest;
-    appendPrintBuf("%sformat=%d,", printBuf, rism.format);
     if (countStrings == 0) {
         // just some non-null pointer
         pStrings = (char **)alloca(sizeof(char *));
@@ -1482,7 +1482,7 @@ static void dispatchSetInitialAttachApn(Parcel &p, RequestInfo *pRI)
 
     startRequest;
     appendPrintBuf("%sapn=%s, protocol=%s, auth_type=%d, username=%s, password=%s",
-            printBuf, pf.apn, pf.protocol, pf.auth_type, pf.username, pf.password);
+            printBuf, pf.apn, pf.protocol, pf.authtype, pf.username, pf.password);
     closeRequest;
     printRequest(pRI->token, pRI->pCI->requestNumber);
 
